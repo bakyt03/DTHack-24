@@ -28,7 +28,7 @@ button:disabled{
 }
 
 .page{ 
-    @apply bg-bg min-h-[100vh] -mt-12 pt-12 w-screen
+    @apply bg-bg min-h-[100vh] -mt-12 pt-12 w-screen text-white
 }
 
 .content{
