@@ -155,75 +155,75 @@ export default function History() {
   }, [search, allDocuments]);
   return (
     <div className="page">
-      <h1 className="mt-7 text-3xl font-bold mx-auto text-center w-fit">
-        History
-      </h1>
+      <div className="content">
+        <h1 className="mt-7 text-3xl font-bold text-center">History</h1>
 
-      <div className="mt-5 w-[70%] mx-auto">
-        <div className="flex justify-between">
-          <div className="flex items-center mb-5">
-            <h3>Sort by:</h3>
-            <select
-              value={sortOption}
-              onChange={handleSortChange}
-              className="mx-2 p-2 border rounded-md"
-            >
-              <option value="date">Date</option>
-              <option value="title">Title</option>
-            </select>
-            <div className="cursor-pointer" onClick={toggleSortOrder}>
-              {isAscending ? <IconSortAscending /> : <IconSortDescending />}
-            </div>
-          </div>
-          <div className="filters">
-            {types.map((type) => (
-              <button
-                key={type}
-                className={`mx-2 p-2 border rounded-md ${
-                  selectedTypes.includes(type) ? "bg-primary text-white" : ""
-                }`}
-                onClick={() => {
-                  updateSelectedTypes(type);
-                }}
+        <div className="mt-5">
+          <div className="flex justify-between">
+            <div className="flex items-center mb-5">
+              <h3>Sort by:</h3>
+              <select
+                value={sortOption}
+                onChange={handleSortChange}
+                className="mx-2 p-2 border rounded-md bg-terciary"
               >
-                {type}
-              </button>
-            ))}
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Search"
-              className="p-2 border rounded-md"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-        </div>
-
-        {documents.map((document) => (
-          <div
-            key={document.id}
-            className="border-4 border-gray-200 mb-2 rounded-xl"
-          >
-            <div className="flex justify-between items-center py-3 px-3">
-              <div className="flex child:mx-3">
-                <div>{document.title}</div>
-                <div>{document.date}</div>
-                <div>{document.type}</div>
-              </div>
-              <div className="flex child:mx-3 items-center">
-                View details
-                <button
-                  className="flex p-2 bg-gray-200 rounded-md"
-                  onClick={() => handleDownload(document)}
-                >
-                  Download <IconDownload className="ml-2" />
-                </button>
+                <option value="date">Date</option>
+                <option value="title">Title</option>
+              </select>
+              <div className="cursor-pointer" onClick={toggleSortOrder}>
+                {isAscending ? <IconSortAscending /> : <IconSortDescending />}
               </div>
             </div>
+            <div className="filters">
+              {types.map((type) => (
+                <button
+                  key={type}
+                  className={`mx-2 p-2 border rounded-md border-primary ${
+                    selectedTypes.includes(type) ? "bg-primary text-white" : ""
+                  }`}
+                  onClick={() => {
+                    updateSelectedTypes(type);
+                  }}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder="Search"
+                className="p-2 border rounded-md bg-terciary"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
           </div>
-        ))}
+
+          {documents.map((document) => (
+            <div
+              key={document.id}
+              className="border-4 border-primary mb-2 rounded-xl bg-secondary"
+            >
+              <div className="flex justify-between items-center py-3 px-2">
+                <div className="flex child:mx-3">
+                  <div>{document.title}</div>
+                  <div>{document.date}</div>
+                  <div>{document.type}</div>
+                </div>
+                <div className="flex child:mx-3 items-center">
+                  View details
+                  <button
+                    className="flex p-2 bg-terciary rounded-md"
+                    onClick={() => handleDownload(document)}
+                  >
+                    Download <IconDownload className="ml-2" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
