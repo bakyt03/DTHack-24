@@ -74,6 +74,10 @@ export default function History() {
   const [types, setTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [search, setSearch] = useState("");
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  console.log(itemsPerPage);
 
   useEffect(() => {
     const initialTypes = [...new Set(allDocuments.map((doc) => doc.type))];
@@ -153,19 +157,36 @@ export default function History() {
     );
     setDocuments(filtered);
   }, [search, allDocuments]);
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page when items per page changes
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedDocuments = documents.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+  const totalPages = Math.ceil(documents.length / itemsPerPage);
+
   return (
     <div className="page">
-      <div className="content">
-        <h1 className="mt-7 text-3xl font-bold text-center">History</h1>
+      <div className="content bg-terciary rounded-xl">
+        <h1 className="mt-4 text-3xl font-bold text-center">User history</h1>
 
-        <div className="mt-5">
-          <div className="flex justify-between">
+        <div className="mt-5 pb-5">
+          <div className="flex justify-between px-6">
             <div className="flex items-center mb-5">
               <h3>Sort by:</h3>
               <select
                 value={sortOption}
                 onChange={handleSortChange}
-                className="mx-2 p-2 border rounded-md bg-terciary"
+                className="mx-2 p-2 border rounded-xl bg-terciary"
               >
                 <option value="date">Date</option>
                 <option value="title">Title</option>
@@ -178,7 +199,7 @@ export default function History() {
               {types.map((type) => (
                 <button
                   key={type}
-                  className={`mx-2 p-2 border-2 rounded-md border-primary ${
+                  className={`mx-2 p-2 border-2 rounded-xl border-primary ${
                     selectedTypes.includes(type) ? "bg-primary text-white" : ""
                   }`}
                   onClick={() => {
@@ -200,29 +221,88 @@ export default function History() {
             </div>
           </div>
 
-          {documents.map((document) => (
-            <div
-              key={document.id}
-              className="border-2 border-primary mb-2 rounded-xl bg-secondary"
+          {paginatedDocuments.length > 0 ? (
+            <table className="w-full">
+              <thead className="border-t border-b">
+                <tr className="child:py-4">
+                  <th className="text-left pl-4">Date</th>
+                  <th className="text-left">Document name</th>
+                  <th className="text-left">Type</th>
+                  <th className="text-left">Score</th>
+                  <th className="text-right pr-4">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedDocuments.map((document) => (
+                  <tr key={document.id}>
+                    <td className="p-2 pl-4">{document.date}</td>
+                    <td className="p-2">{document.title}</td>
+                    <td className="p-2">{document.type}</td>
+                    <td className="p-2">90%</td>
+                    <td className="p-2 pr-4">
+                      <div className="flex items-center justify-end ">
+                        <span className="">
+                          <IconDownload className="mr-2" />
+                        </span>
+                        <button
+                          className="flex p-2 ml-3 bg-primary rounded-xl"
+                          onClick={() => handleDownload(document)}
+                        >
+                          View Details
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No documents available.</p>
+          )}
+
+          <div className="flex justify-between mt-4 px-6 items-center">
+            <select
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+              className="mx-2 p-2 border rounded-xl bg-bg"
             >
-              <div className="flex justify-between items-center py-3 px-2">
-                <div className="flex child:mx-3">
-                  <div>{document.title}</div>
-                  <div>{document.date}</div>
-                  <div>{document.type}</div>
-                </div>
-                <div className="flex child:mx-3 items-center">
-                  View details
-                  <button
-                    className="flex p-2 bg-terciary rounded-md"
-                    onClick={() => handleDownload(document)}
-                  >
-                    Download <IconDownload className="ml-2" />
-                  </button>
-                </div>
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <div className="flex items-center">
+              <div>
+                <select
+                  value={currentPage}
+                  onChange={(e) => handlePageChange(Number(e.target.value))}
+                  className="mx-2 p-2 border rounded-xl bg-bg"
+                >
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {i + 1}
+                    </option>
+                  ))}
+                </select>
+                <span>of {totalPages} pages</span>
+              </div>
+              <div className="child:ml-6 child:text-2xl child:font-bold">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  &lt;
+                </button>
+
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  &gt;
+                </button>
               </div>
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </div>
