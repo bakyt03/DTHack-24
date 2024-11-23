@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 //pages
 import Navbar from "./components/Navbar"
 import Footer from './components/Footer';
@@ -7,10 +7,11 @@ import User from './pages/User';
 import History from './pages/History';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import { useAuthContext } from './hooks/useAuthContext';
 
 
 export default function App() {
-
+  const { user } = useAuthContext()
 
   return (
     <BrowserRouter >
@@ -20,8 +21,8 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="user" element={<User />} />
           <Route path="history" element={<History />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/signup' element={<Signup />} />
+          <Route path="login" element={!user ? <Login /> : <Navigate to={"/admin"} />} />
+          <Route path="signup" element={!user ? <Signup /> : <Navigate to={"/admin"} />} />
         </Routes>
         {/* <Footer /> */}
       </main>
