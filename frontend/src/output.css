@@ -572,8 +572,21 @@ video {
   margin-right: auto;
 }
 
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mb-12 {
+  margin-bottom: 3rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
 }
 
 .mb-5 {
@@ -604,10 +617,6 @@ video {
   margin-top: 4rem;
 }
 
-.mt-4 {
-  margin-top: 1rem;
-}
-
 .mt-5 {
   margin-top: 1.25rem;
 }
@@ -616,12 +625,16 @@ video {
   margin-top: 1.75rem;
 }
 
-.mb-12 {
-  margin-bottom: 3rem;
+.mb-1 {
+  margin-bottom: 0.25rem;
 }
 
-.mb-4 {
-  margin-bottom: 1rem;
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
 }
 
 .inline-block {
@@ -640,8 +653,8 @@ video {
   height: 3rem;
 }
 
-.h-\[50vh\] {
-  height: 50vh;
+.h-\[20vh\] {
+  height: 20vh;
 }
 
 .h-\[90vh\] {
@@ -656,12 +669,8 @@ video {
   height: 100vh;
 }
 
-.h-\[10vh\] {
-  height: 10vh;
-}
-
-.h-\[5vh\] {
-  height: 5vh;
+.h-\[70vh\] {
+  height: 70vh;
 }
 
 .min-h-full {
@@ -779,7 +788,7 @@ video {
 
 .bg-bg {
   --tw-bg-opacity: 1;
-  background-color: rgb(21 21 21 / var(--tw-bg-opacity, 1));
+  background-color: rgb(37 37 37 / var(--tw-bg-opacity, 1));
 }
 
 .bg-gray-200 {
@@ -799,12 +808,22 @@ video {
 
 .bg-terciary {
   --tw-bg-opacity: 1;
-  background-color: rgb(37 37 37 / var(--tw-bg-opacity, 1));
+  background-color: rgb(21 21 21 / var(--tw-bg-opacity, 1));
 }
 
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+
+.bg-red-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 202 202 / var(--tw-bg-opacity, 1));
+}
+
+.bg-red-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 226 226 / var(--tw-bg-opacity, 1));
 }
 
 .p-1 {
@@ -853,14 +872,14 @@ video {
   padding-bottom: 0.75rem;
 }
 
-.py-8 {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .text-center {
@@ -975,7 +994,7 @@ button:disabled {
   min-height: 100vh;
   width: 100vw;
   --tw-bg-opacity: 1;
-  background-color: rgb(21 21 21 / var(--tw-bg-opacity, 1));
+  background-color: rgb(37 37 37 / var(--tw-bg-opacity, 1));
   padding-top: 3rem;
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
