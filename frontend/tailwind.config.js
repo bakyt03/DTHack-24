@@ -5,8 +5,15 @@ module.exports = {
     extend: {
       colors: {
         primary: "#453f8b",
+        secondary: "#5e56b3",
+        terciary: "#524b9f",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addVariant }) {
+      addVariant("child", "& > *");
+      addVariant("child-hover", "& > *:hover");
+    },
+  ],
 };

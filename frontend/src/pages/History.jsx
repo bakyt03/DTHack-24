@@ -1,3 +1,4 @@
+import { IconDownload } from "@tabler/icons-react";
 import { useState } from "react";
 
 export default function History() {
@@ -38,7 +39,9 @@ export default function History() {
                 <div>{document.title}</div>
                 <div>{document.date}</div>
               </div>
-              <button className="block py-2 bg-gray-200">Download</button>
+              <button className="flex p-2 bg-gray-200 rounded-md">
+                Download <IconDownload className="ml-2" />
+              </button>
             </div>
           </div>
         ))}
