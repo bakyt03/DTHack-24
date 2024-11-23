@@ -26,7 +26,7 @@ const Login = () => {
 
                 {error && <div className="error">{error}</div>}
             </form>
-            <p className=" mb-52">Ešte nemáš účet? <Link to={'/signup'} className="text-accent underline">Registruj sa!</Link></p>
+            <p className=" mb-52">Ešte nemáš účet? <Link to={'/signup'} className="text-primary underline">Registruj sa!</Link></p>
         </div>
     );
 }

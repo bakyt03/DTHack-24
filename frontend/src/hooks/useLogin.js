@@ -11,7 +11,7 @@ export const useLogin = () => {
         setError(null)
 
 
-        const response = await fetch(`${process.env.REACT_APP_PATH}/users/`, {
+        const response = await fetch(`${process.env.REACT_APP_PATH}/users/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
