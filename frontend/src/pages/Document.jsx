@@ -75,7 +75,7 @@ export default function Document() {
             <div className='w-1/4 h-[90vh] '>
                 <div className='bg-terciary mx-4 rounded-2xl  flex items-center h-[90vh] '>
 
-                    <form onSubmit={handleSubmit} className='mx-auto flex flex-col justify-between  h-[85vh]   w-[80%] ' >
+                    <form onSubmit={handleSubmit} className='mx-auto flex flex-col justify-between  h-[85vh] py-8   w-[80%] ' >
                         <h1 className='text-2xl text-primary text-center'>New Report</h1>
                         <div className='flex flex-col mt-4'>
                             <label htmlFor="docnName" className='text-center text-lg font-semibold text-primary '>Document Name:</label>
