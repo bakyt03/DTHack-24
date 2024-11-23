@@ -154,7 +154,7 @@ export default function History() {
     setDocuments(filtered);
   }, [search, allDocuments]);
   return (
-    <div>
+    <div className="page">
       <h1 className="mt-7 text-3xl font-bold mx-auto text-center w-fit">
         History
       </h1>
