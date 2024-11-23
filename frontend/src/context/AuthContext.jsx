@@ -23,31 +23,8 @@ export const AuthContextProvider = ({ children }) => {
 
     useEffect(() => {
 
-
-
-        const fetchAdmin = async () => {
-            const res = await fetch(`${process.env.REACT_APP_PATH}/api/admin/` + user.ID, {
-                headers: {
-                    'Authorization': `Bearer ${user.token}`
-                }
-            })
-
-            const json = await res.json()
-
-            if (res.ok) {
-                if (json[0].rights !== user.rights) {
-                    localStorage.removeItem('user')
-                    dispatch({ type: 'LOGOUT' })
-                }
-            }
-        }
-
         const user = JSON.parse(localStorage.getItem('user'))
         dispatch({ type: 'LOGIN', payload: user })
-        if (user) {
-            fetchAdmin()
-        }
-
 
     }, [])
 

@@ -20,9 +20,9 @@ export default function App() {
         <Navbar />
         <Routes className=''>
           <Route index element={<Home />} />
-          <Route path='doc' element={!user ? <Document /> : <Navigate to={"/login"} />} />
-          <Route path="user" element={!user ? <User /> : <Navigate to={"/login"} />} />
-          <Route path="history" element={!user ? <History /> : <Navigate to={"/login"} />} />
+          <Route path='doc' element={user ? <Document /> : <Navigate to={"/login"} />} />
+          <Route path="user" element={user ? <User /> : <Navigate to={"/login"} />} />
+          <Route path="history" element={user ? <History /> : <Navigate to={"/login"} />} />
           <Route path="login" element={!user ? <Login /> : <Navigate to={"/"} />} />
           <Route path="signup" element={!user ? <Signup /> : <Navigate to={"/"} />} />
         </Routes>

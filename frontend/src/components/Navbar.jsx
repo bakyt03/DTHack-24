@@ -16,7 +16,7 @@ export default function Navbar() {
                 <div className="flex justify-between max-w-[80vw] mx-auto items-center h-12 text-white">
                     <Link className='w-1/4' to={'/'}>DigitalPeak</Link>
                     <div className="flex w-[40vw] justify-around items-center">
-                        <Link to={'/'}>Home</Link>
+                        <Link to={'/doc'}>Documents</Link>
                         <Link to={'/user'}>User</Link>
                         <Link to={'/history'}>History</Link>
 
