@@ -178,7 +178,7 @@ export default function History() {
               {types.map((type) => (
                 <button
                   key={type}
-                  className={`mx-2 p-2 border rounded-md border-primary ${
+                  className={`mx-2 p-2 border-2 rounded-md border-primary ${
                     selectedTypes.includes(type) ? "bg-primary text-white" : ""
                   }`}
                   onClick={() => {
@@ -193,7 +193,7 @@ export default function History() {
               <input
                 type="text"
                 placeholder="Search"
-                className="p-2 border rounded-md bg-terciary"
+                className="p-2 border rounded-xl bg-terciary"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -203,7 +203,7 @@ export default function History() {
           {documents.map((document) => (
             <div
               key={document.id}
-              className="border-4 border-primary mb-2 rounded-xl bg-secondary"
+              className="border-2 border-primary mb-2 rounded-xl bg-secondary"
             >
               <div className="flex justify-between items-center py-3 px-2">
                 <div className="flex child:mx-3">
