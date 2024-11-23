@@ -7,6 +7,7 @@ import User from './pages/User';
 import History from './pages/History';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Document from './pages/Document';
 import { useAuthContext } from './hooks/useAuthContext';
 
 
@@ -19,10 +20,11 @@ export default function App() {
         <Navbar />
         <Routes className=''>
           <Route index element={<Home />} />
-          <Route path="user" element={<User />} />
-          <Route path="history" element={<History />} />
-          <Route path="login" element={!user ? <Login /> : <Navigate to={"/admin"} />} />
-          <Route path="signup" element={!user ? <Signup /> : <Navigate to={"/admin"} />} />
+          <Route path='doc' element={!user ? <Document /> : <Navigate to={"/login"} />} />
+          <Route path="user" element={!user ? <User /> : <Navigate to={"/login"} />} />
+          <Route path="history" element={!user ? <History /> : <Navigate to={"/login"} />} />
+          <Route path="login" element={!user ? <Login /> : <Navigate to={"/"} />} />
+          <Route path="signup" element={!user ? <Signup /> : <Navigate to={"/"} />} />
         </Routes>
         {/* <Footer /> */}
       </main>
