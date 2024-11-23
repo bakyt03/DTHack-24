@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+body{
+    background: #f8f8f8;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+
+.wroInput{
+    color: red;
+    border-color: red;
+}
+
+.error{
+    @apply bg-red-200 text-red-600 py-2 px-3 border border-red-600
+}
+
+.btn{
+    @apply cursor-pointer px-4 py-1 bg-primary text-white rounded-md
+}
+
+button:disabled{
+    @apply cursor-not-allowed opacity-60 
+}
