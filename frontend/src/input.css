@@ -26,3 +26,11 @@ body{
 button:disabled{
     @apply cursor-not-allowed opacity-60 
 }
+
+.page{ 
+    @apply bg-bg min-h-[100vh] -mt-12 pt-12 w-screen
+}
+
+.content{
+    @apply mx-auto max-w-[1200px] w-[80vw] 
+}
