@@ -207,7 +207,7 @@ export default function History() {
             className="border-4 border-gray-200 mb-2 rounded-xl"
           >
             <div className="flex justify-between items-center py-3 px-3">
-              <div className="flex *:mx-3">
+              <div className="flex child:mx-3">
                 <div>{document.title}</div>
                 <div>{document.date}</div>
               </div>
