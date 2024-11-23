@@ -210,13 +210,17 @@ export default function History() {
               <div className="flex child:mx-3">
                 <div>{document.title}</div>
                 <div>{document.date}</div>
+                <div>{document.type}</div>
               </div>
-              <button
-                className="flex p-2 bg-gray-200 rounded-md"
-                onClick={() => handleDownload(document)}
-              >
-                Download <IconDownload className="ml-2" />
-              </button>
+              <div className="flex child:mx-3 items-center">
+                View details
+                <button
+                  className="flex p-2 bg-gray-200 rounded-md"
+                  onClick={() => handleDownload(document)}
+                >
+                  Download <IconDownload className="ml-2" />
+                </button>
+              </div>
             </div>
           </div>
         ))}
