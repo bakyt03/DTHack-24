@@ -20,7 +20,7 @@ export default function User() {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_PATH}/users/userdata?id=${user.id}`
+        `${process.env.REACT_APP_PATH}/users/user-data?id=${user.id}`
       );
       const data = await response.json();
       console.log(data);
@@ -49,7 +49,7 @@ export default function User() {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_PATH}/users/updateuserdata?dataID=${id}&value=${value}`,
+        `${process.env.REACT_APP_PATH}/users/user-data?dataID=${id}&value=${value}`,
         {
           method: "PUT",
           headers: {
@@ -74,7 +74,7 @@ export default function User() {
     if (window.confirm("Are you sure?")) {
       console.log("Deleting data:", id);
 
-      fetch(`${process.env.REACT_APP_PATH}/users/deleteuserdata?dataID=${id}`, {
+      fetch(`${process.env.REACT_APP_PATH}/users/user-data?dataID=${id}`, {
         method: "DELETE",
       })
         .then((response) => {

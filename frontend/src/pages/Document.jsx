@@ -98,7 +98,7 @@ export default function Document() {
         dataF.append('instructions', formData.rules);
         dataF.append('documentName', formData.docnName);
         if (question.length > 5) {
-            fetch(`${process.env.REACT_APP_PATH}/openapi/askquestion?assistantID=${response.assistandId}&userPrompt=${question}&userID=${user.id}`, {
+            fetch(`${process.env.REACT_APP_PATH}/openapi/ask-question?assistantID=${response.assistandId}&userPrompt=${question}&userID=${user.id}`, {
                 method: 'POST',
                 body: dataF,
                 headers: {
@@ -133,7 +133,7 @@ export default function Document() {
     const fetchUserData = async () => {
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_PATH}/users/userdata?id=${user.id}`
+                `${process.env.REACT_APP_PATH}/users/user-data?id=${user.id}`
             );
             const data = await response.json();
             console.log(data);
