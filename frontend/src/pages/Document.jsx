@@ -420,7 +420,7 @@ const CircularProgress = ({ value, max = 100 }) => {
     }
 
     return (
-        <div className="relative flex items-center justify-center w-20 h-20">
+        <div className="relative flex items-center justify-center w-20 h-20 -z-0">
 
             <svg className="rotate-90" width="80" height="80">
                 {/* Background Circle */}
