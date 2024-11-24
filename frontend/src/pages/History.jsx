@@ -177,7 +177,6 @@ export default function History() {
     return (
         <div className="page">
             <div className="content bg-terciary rounded-xl">
-                <h1 className="mt-4 text-3xl font-bold text-center">User history</h1>
 
                 <div className="mt-5 pb-5">
                     <div className="flex justify-between px-6">

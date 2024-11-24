@@ -7,6 +7,7 @@ body{
     background: #f8f8f8;
     overflow-x: hidden;
     box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
 }
 
 
@@ -28,7 +29,7 @@ button:disabled{
 }
 
 .page{ 
-    @apply bg-bg min-h-[100vh] -mt-12 pt-12 w-screen text-white
+    @apply bg-terciary min-h-[100vh] -mt-16 pt-16 w-screen text-white
 }
 
 .content{
