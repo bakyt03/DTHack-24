@@ -637,8 +637,20 @@ video {
   margin-top: 2rem;
 }
 
+.ml-3 {
+  margin-left: 0.75rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
 .flex {
   display: flex;
+}
+
+.table {
+  display: table;
 }
 
 .hidden {
@@ -713,6 +725,10 @@ video {
   width: max-content;
 }
 
+.w-\[60\%\] {
+  width: 60%;
+}
+
 .max-w-\[80vw\] {
   max-width: 80vw;
 }
@@ -782,9 +798,30 @@ video {
   border-width: 2px;
 }
 
+.border-b {
+  border-bottom-width: 1px;
+}
+
+.border-t {
+  border-top-width: 1px;
+}
+
+.border-b-2 {
+  border-bottom-width: 2px;
+}
+
+.border-r {
+  border-right-width: 1px;
+}
+
 .border-primary {
   --tw-border-opacity: 1;
   border-color: rgb(230 58 70 / var(--tw-border-opacity, 1));
+}
+
+.border-white {
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
 }
 
 .bg-bg {
@@ -817,12 +854,21 @@ video {
   background-color: rgb(254 226 226 / var(--tw-bg-opacity, 1));
 }
 
+.\!bg-terciary {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(21 21 21 / var(--tw-bg-opacity, 1)) !important;
+}
+
 .p-2 {
   padding: 0.5rem;
 }
 
 .p-8 {
   padding: 2rem;
+}
+
+.p-4 {
+  padding: 1rem;
 }
 
 .px-16 {
@@ -875,6 +921,11 @@ video {
   padding-bottom: 2rem;
 }
 
+.py-\[6px\] {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
 .pb-10 {
   padding-bottom: 2.5rem;
 }
@@ -883,8 +934,28 @@ video {
   padding-top: 1rem;
 }
 
+.pb-5 {
+  padding-bottom: 1.25rem;
+}
+
+.pl-4 {
+  padding-left: 1rem;
+}
+
+.pr-4 {
+  padding-right: 1rem;
+}
+
+.text-left {
+  text-align: left;
+}
+
 .text-center {
   text-align: center;
+}
+
+.text-right {
+  text-align: right;
 }
 
 .text-end {
@@ -1038,12 +1109,34 @@ button:disabled {
   margin-bottom: 0.5rem;
 }
 
+.child\:ml-6 > * {
+  margin-left: 1.5rem;
+}
+
 .child\:flex > * {
   display: flex;
 }
 
 .child\:justify-between > * {
   justify-content: space-between;
+}
+
+.child\:justify-around > * {
+  justify-content: space-around;
+}
+
+.child\:py-4 > * {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.child\:text-2xl > * {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.child\:font-bold > * {
+  font-weight: 700;
 }
 
 @media (min-width: 768px) {
