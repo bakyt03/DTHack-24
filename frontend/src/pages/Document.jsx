@@ -16,6 +16,8 @@ export default function Document() {
     const [response, setResponse] = useState(null);
     const [correctness, setCorrectness] = useState(0);
     const [mistakeCount, setMistakeCount] = useState(0);
+    const [notSureReplying, setNotSureReplying] = useState("");
+    const [notSureReplyingIndex, setNotSureReplyingIndex] = useState(null);
 
     const [formData, setFormData] = useState({
         target: null,
@@ -76,6 +78,8 @@ export default function Document() {
                 console.log(parsedData);
                 setCorrectness(parsedData.primaryCorrect);
                 setMistakeCount(parsedData.mistakes.length);
+                parsedData.notSureAbout.push('i think the date field should be filled');
+
                 setResponse(parsedData);
                 setFixedMistakes([]);
                 if (parsedData.error) {
@@ -106,6 +110,11 @@ export default function Document() {
         dataF.append('instructions', formData.rules);
         dataF.append('documentName', formData.docnName);
         if (question.length > 5) {
+            if (notSureReplying) {
+                dataF.append('question', `You were not sure about this field: ${notSureReplying}. ${question}`);
+                setNotSureReplying("");
+                setNotSureReplyingIndex(null);
+            }
             fetch(`${process.env.REACT_APP_PATH}/openapi/ask-question?assistantID=${response.assistantId}&userPrompt=${question}&userID=${user.id}`, {
                 method: 'POST',
                 body: dataF,
@@ -200,12 +209,17 @@ export default function Document() {
 
 
     useEffect(() => {
-        let temp = (100 - response?.primaryCorrect) / mistakeCount;
-        let temp2 = response?.primaryCorrect + fixedMistakes.length * temp
-        if (temp2 > 100) {
-            setCorrectness(100);
+        if (fixedMistakes.length === 0) {
+            setCorrectness(response?.primaryCorrect);
+        } else {
+            let temp = (100 - response?.primaryCorrect) / mistakeCount;
+            let temp2 = response?.primaryCorrect + fixedMistakes.length * temp
+            if (temp2 > 100) {
+                setCorrectness(100);
+            }
+            setCorrectness(Math.round(temp2));
         }
-        setCorrectness(Math.round(temp2));
+
 
         // eslint-disable-next-line
     }, [fixedMistakes]);
@@ -223,7 +237,6 @@ export default function Document() {
         }, 500);
         return () => clearInterval(interval);
     }, []);
-
 
     return (
         <div className="page flex items-center !bg-terciary">
@@ -358,14 +371,21 @@ export default function Document() {
                                         <div key={index} className='flex items-center justify-between '>
                                             <span className='size-3 bg-gray-500 rounded-full mr-4 shadow-md shadow-gray-500'></span>
                                             <p>{mistake}</p>
-                                            <div className='py-1 px-4 bg-primary rounded-md cursor-pointer'>Reply</div>
+                                            <div className='py-1 px-4 bg-primary rounded-md cursor-pointer' onClick={() => { setNotSureReplying(mistake); setNotSureReplyingIndex(index) }}>Reply</div>
                                         </div>
                                     ))}
                                 </div>
                             </div>}
                         </div>
+                        {notSureReplying && (
+                            <div className='flex items-center'>
+                                <span className="text-white bg-primary max-w-50 text-nowrap text-ellipsis overflow-x-hidden rounded-t-xl py-1 px-4">Replying to: "unsure about [{notSureReplyingIndex + 1}]" <span className='cursor-pointer ml-4' onClick={() => { setNotSureReplying(""); setNotSureReplyingIndex(null) }}>x</span></span>
+
+                            </div>
+                        )}
                         <div className='w-full flex items-center'>
-                            <input value={question} onChange={e => setQuestion(e.target.value)} type="text" className='bg-bg py-2 w-full rounded-md' placeholder='' />
+
+                            <input value={question} onChange={e => setQuestion(e.target.value)} type="text" className={`bg-bg py-2 w-full rounded-md ${notSureReplyingIndex !== null ? " rounded-tl-none  border-t-2 border-primary " : ""}`} placeholder='' />
                             <div className='w-max text-nowrap py-2 px-4 bg-primary rounded-md ml-4 cursor-pointer ' onClick={askQuestion}>{pending ? "Generating" : "Send"}</div>
                         </div>
 
