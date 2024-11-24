@@ -1,7 +1,10 @@
 import { useState, useRef } from 'react';
-import { IconFileFilled, IconFile, IconFileSettings, IconFileSpark, IconCheck, IconX } from '@tabler/icons-react';
+import { IconFileFilled, IconFile, IconFileSettings, IconFileSpark, IconCheck, IconX, IconUpload, IconReload } from '@tabler/icons-react';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 export default function Document() {
+
+    const { user } = useAuthContext();
 
     const [pending, setPending] = useState(false);
     const targetInputRef = useRef(null);
@@ -52,7 +55,7 @@ export default function Document() {
         dataF.append('instructions', formData.rules);
         dataF.append('documentName', formData.docnName);
 
-        fetch(`${process.env.REACT_APP_PATH}/openapi/newchat?documentName=${formData.docnName}`, {
+        fetch(`${process.env.REACT_APP_PATH}/openapi/upload?documentName=${formData.docnName}&userID=${user.id}`, {
             method: 'POST',
             body: dataF,
             headers: {
@@ -81,11 +84,49 @@ export default function Document() {
                 setResolved(true);
             });
         console.log(response);
-
-
-        setPending(false);
-        setResolved(true);
     };
+
+    const [question, setQuestion] = useState('');
+
+
+    const askQuestion = () => {
+        setPending(true);
+        let dataF = new FormData();
+        dataF.append('document', formData.target);
+        dataF.append('instructions', formData.rules);
+        dataF.append('documentName', formData.docnName);
+        if (question.length > 5) {
+            fetch(`${process.env.REACT_APP_PATH}/openapi/askquestion?assistantID=${response.assistandId}&userPrompt=${question}&userID=${user.id}`, {
+                method: 'POST',
+                body: dataF,
+                headers: {
+                    type: 'formData'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+
+                    let parsedData = data.response;
+                    parsedData['assistandId'] = data.assistandId;
+                    parsedData['primaryCorrect'] = parseInt(parsedData.completeness.match(/\d+/)[0], 10);
+                    const secondaryMatch = parsedData.completeness.match(/\d+/g);
+                    parsedData['secondaryCorrect'] = secondaryMatch.length > 1 ? parseInt(secondaryMatch[1], 10) : null;
+                    console.log(parsedData);
+
+                    setResponse(parsedData);
+                })
+                .catch(err => {
+                    console.error(err);
+                }).finally(() => {
+                    setPending(false);
+                    setQuestion('');
+                });
+        } else {
+            alert('Question too short')
+        }
+    }
+
+
 
     const handleFileChange = async (event, doc) => {
         setPending(true);
@@ -118,15 +159,15 @@ export default function Document() {
                         <form onSubmit={handleSubmit} className='grow mx-auto w-[80%] mt-4' >
 
                             {!resolved && <div className='flex flex-col my-4 '>
-                                <label htmlFor="docnName" className='text-center text-lg font-semibold mb-1'>Document Name</label>
+                                <label htmlFor="docnName" className='text-center text-lg  mb-1'>Document Name</label>
                                 <input className='bg-bg  rounded-md px-4 py-2 text-white' type="text" id="docnName" name="docnName" value={formData.docnName} onChange={handleChange} />
                             </div>}
                             <div className='flex flex-col justify-center my-4'>
-                                <label className='text-center text-lg font-semibold mb-1' htmlFor="target">Target File</label>
+                                <label className='text-center text-lg  mb-1' htmlFor="target">Target File</label>
 
-                                <div className="bg-bg  font-bold cursor-pointer py-4 rounded-md flex flex-col justify-center items-center  " onClick={() => openFileExplorer(1)}>
+                                <div className="bg-bg   cursor-pointer py-4 rounded-md flex flex-col justify-center items-center  " onClick={() => openFileExplorer(1)}>
 
-                                    {formData.target ? <IconFileFilled size={32} color='#fff' /> : <IconFile size={32} color='#fff' />}
+                                    {formData.target ? <IconFileFilled size={32} color='#fff' /> : <IconUpload size={32} color='#fff' />}
                                     {!!formData.target && <p className=' text-sm text-center'>{formData.target.name}</p>}
                                     {pending && <p className=' text-sm'>Uploading...</p>}
                                     <input
@@ -134,24 +175,23 @@ export default function Document() {
                                         ref={targetInputRef}
                                         onChange={e => handleFileChange(e, 1)}
                                         className='hidden'
-                                        disabled={resolved}
                                     />
                                 </div>
                             </div>
                             <div className=' flex flex-col  justify-center my-4'>
-                                <label className='text-center text-lg font-semibold mb-1' htmlFor="rules">Rules File</label>
-                                <div className="bg-bg  font-bold cursor-pointer py-4   rounded-md flex flex-col justify-center items-center  " onClick={() => openFileExplorer(2)}>
+                                <label className='text-center text-lg  mb-1' htmlFor="rules">Rules File</label>
+                                <div className="bg-bg relative  font-bold cursor-pointer py-4   rounded-md flex flex-col justify-center items-center  " onClick={() => openFileExplorer(2)}>
 
-                                    {formData.rules ? <IconFileFilled size={32} color='#fff' /> : <IconFile size={32} color='#fff' />}
+                                    {formData.rules ? <IconFileFilled size={32} color='#fff' /> : <IconUpload size={32} color='#fff' />}
                                     {!!formData.rules && <p className=' text-sm text-center'>{formData.rules.name}</p>}
                                     {pending && <p className=' text-sm'>Uploading...</p>}
+                                    {resolved && <div className='h-full flex justify-center items-center w-20 rounded-r-md text-sm absolute bg-primary right-0'><IconReload color='#fff' /></div>}
 
                                     <input
                                         type="file"
                                         ref={rulesInputRef}
                                         onChange={e => handleFileChange(e, 2)}
                                         className='hidden'
-                                        disabled={resolved}
                                     />
                                 </div>
                             </div>
@@ -186,8 +226,8 @@ export default function Document() {
                                 <h2 className='  py-2 mb-2 border-b border-white text-lg'>Mistakes Found</h2>
                                 <div>
                                     {response.mistakes.map((mistake, index) => (
-                                        <div key={index} className='flex items-center'>
-                                            <p>{mistake}</p>
+                                        <div key={index} className='flex items-center pb-3'>
+                                            <span className='size-3 bg-primary rounded-full mr-4 shadow-md shadow-primary'></span> <p>{mistake}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -197,19 +237,17 @@ export default function Document() {
                                 <div>
                                     {response.notSureAbout.map((mistake, index) => (
                                         <div key={index} className='flex items-center justify-between '>
+                                            <span className='size-3 bg-gray-500 rounded-full mr-4 shadow-md shadow-gray-500'></span>
                                             <p>{mistake}</p>
-                                            <div className='flex'>
-                                                <IconCheck className='mr-4 cursor-pointer' size={32} color='#65a30d' />
-                                                <IconX className='cursor-pointer' size={32} color='#dc2626' />
-                                            </div>
+                                            <div className='py-1 px-4 bg-primary rounded-md cursor-pointer'>Reply</div>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         </div>
                         <div className='w-full flex items-center'>
-                            <input type="text" className='bg-bg py-2 w-full rounded-md' placeholder='' />
-                            <div className='w-max text-nowrap py-2 px-4 bg-primary rounded-md ml-4 cursor-pointer '>Send response</div>
+                            <input value={question} onChange={e => setQuestion(e.target.value)} type="text" className='bg-bg py-2 w-full rounded-md' placeholder='' />
+                            <div className='w-max text-nowrap py-2 px-4 bg-primary rounded-md ml-4 cursor-pointer ' onClick={askQuestion}>{pending ? "Generating" : "Send"}</div>
                         </div>
 
                     </div>}
@@ -277,3 +315,4 @@ const CircularProgress = ({ value, max = 100 }) => {
         </div>
     );
 };
+
