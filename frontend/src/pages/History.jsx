@@ -179,7 +179,7 @@ export default function History() {
             <div className="content bg-terciary rounded-xl">
 
                 <div className="mt-5 pb-5">
-                    <div className="flex justify-between px-6">
+                    <div className="flex justify-between px-6 my-3">
                         <div className="flex items-center mb-5">
                             <h3>Sort by:</h3>
                             <select
@@ -221,16 +221,16 @@ export default function History() {
 
                     {paginatedDocuments.length > 0 ? (
                         <table className="w-full">
-                            <thead className="border-t border-b">
-                                <tr className="child:py-4">
+                            <thead className="border-t border-b ">
+                                <tr className="child:py-6">
                                     <th className="text-left pl-4">Date</th>
                                     <th className="text-left">Document name</th>
                                     <th className="text-left">Type</th>
                                     <th className="text-left">Score</th>
-                                    <th className="text-right pr-4">Action</th>
+                                    <th className="text-right pr-24">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="">
                                 {paginatedDocuments.map((document) => (
                                     <tr key={document.id}>
                                         <td className="p-2 pl-4">{document.date}</td>
@@ -262,7 +262,7 @@ export default function History() {
                         <select
                             value={itemsPerPage}
                             onChange={handleItemsPerPageChange}
-                            className="mx-2 p-2 border rounded-xl bg-bg"
+                            className="mx-2 py-[3px] px-2 border-none outline-none rounded-xl bg-bg"
                         >
                             <option value="5">5</option>
                             <option value="10">10</option>
@@ -274,7 +274,7 @@ export default function History() {
                                 <select
                                     value={currentPage}
                                     onChange={(e) => handlePageChange(Number(e.target.value))}
-                                    className="mx-2 p-2 border rounded-xl bg-bg"
+                                    className="mx-2 py-[3px] px-4 border-none outline-none rounded-xl bg-bg"
                                 >
                                     {Array.from({ length: totalPages }, (_, i) => (
                                         <option key={i + 1} value={i + 1}>
