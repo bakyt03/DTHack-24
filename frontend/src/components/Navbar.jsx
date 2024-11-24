@@ -9,7 +9,7 @@ export default function Navbar() {
 
   return (
     <div className="w-screen h-16 text-xl">
-      <div className="fixed h-16 w-screen bg-secondary ">
+      <div className="fixed h-16 w-screen bg-secondary z-50">
         <div className="flex justify-between max-w-[80vw] mx-auto items-center h-16 text-white">
           <Link className="w-1/4 text-2xl" to={"/"}>
             DigitalPeak
