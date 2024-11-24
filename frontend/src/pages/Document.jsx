@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { IconFileFilled, IconFile, IconFileSettings, IconFileSpark } from '@tabler/icons-react';
+import { IconFileFilled, IconFile, IconFileSettings, IconFileSpark, IconCheck, IconX } from '@tabler/icons-react';
 
 export default function Document() {
 
@@ -9,31 +9,32 @@ export default function Document() {
 
     const [resolved, setResolved] = useState(false);
 
-    // const [response, setResponse] = useState(null);
 
-    const [response, setResponse] = useState({
-        completeness: "100%",
-        documentName: "Document 1",
-        documentType: "pdf",
-        primaryCorrect: 85,
-        secondaryCorrect: null,
-        assistandId: "1",
-        mistakes: [
-            "Field 'name' is mandatory and cannot be empty",
-            "Field 'rodne cislo' cannot contain letters",
-            "Field 'rodne cislo' must be 10 characters long",
-        ],
-        notSureAbout: [
-            "i think value in Field 'surname' is too short ",
-            'i think the date field should be filled'
-        ],
-    });
+    const [response, setResponse] = useState(null);
 
     const [formData, setFormData] = useState({
         target: null,
         rules: null,
         docnName: ''
     });
+
+    // {
+    //     completeness: "100%",
+    //         documentName: "Document 1",
+    //             documentType: "pdf",
+    //                 primaryCorrect: 85,
+    //                     secondaryCorrect: null,
+    //                         assistandId: "1",
+    //                             mistakes: [
+    //                                 "Field 'name' is mandatory and cannot be empty",
+    //                                 "Field 'rodne cislo' cannot contain letters",
+    //                                 "Field 'rodne cislo' must be 10 characters long",
+    //                             ],
+    //                                 notSureAbout: [
+    //                                     "i think value in Field 'surname' is too short ",
+    //                                     'i think the date field should be filled'
+    //                                 ],
+    // }
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -45,40 +46,40 @@ export default function Document() {
     };
 
     const handleSubmit = () => {
-        // setPending(true);
-        // let dataF = new FormData();
-        // dataF.append('document', formData.target);
-        // dataF.append('instructions', formData.rules);
-        // dataF.append('documentName', formData.docnName);
+        setPending(true);
+        let dataF = new FormData();
+        dataF.append('document', formData.target);
+        dataF.append('instructions', formData.rules);
+        dataF.append('documentName', formData.docnName);
 
-        // fetch(`${process.env.REACT_APP_PATH}/openapi/newchat?documentName=${formData.docnName}`, {
-        //     method: 'POST',
-        //     body: dataF,
-        //     headers: {
-        //         type: 'formData'
-        //     }
-        // })
-        //     .then((res) => res.json())
-        //     .then((data) => {
-        //         console.log(data);
+        fetch(`${process.env.REACT_APP_PATH}/openapi/newchat?documentName=${formData.docnName}`, {
+            method: 'POST',
+            body: dataF,
+            headers: {
+                type: 'formData'
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
 
-        //         let parsedData = data.response;
-        //         parsedData['assistandId'] = data.assistandId;
-        //         parsedData['primaryCorrect'] = parseInt(parsedData.completeness.match(/\d+/)[0], 10);
-        //         const secondaryMatch = parsedData.completeness.match(/\d+/g);
-        //         parsedData['secondaryCorrect'] = secondaryMatch.length > 1 ? parseInt(secondaryMatch[1], 10) : null;
-        //         console.log(parsedData);
+                let parsedData = data.response;
+                parsedData['assistandId'] = data.assistandId;
+                parsedData['primaryCorrect'] = parseInt(parsedData.completeness.match(/\d+/)[0], 10);
+                const secondaryMatch = parsedData.completeness.match(/\d+/g);
+                parsedData['secondaryCorrect'] = secondaryMatch.length > 1 ? parseInt(secondaryMatch[1], 10) : null;
+                console.log(parsedData);
 
-        //         setResponse(parsedData);
-        //     })
-        //     .catch((err) => {
+                setResponse(parsedData);
+            })
+            .catch((err) => {
 
-        //         console.error(err)
-        //     })
-        //     .finally(() => {
-        //         setPending(false);
-        //         setResolved(true);
-        //     });
+                console.error(err)
+            })
+            .finally(() => {
+                setPending(false);
+                setResolved(true);
+            });
         console.log(response);
 
         setPending(false);
@@ -107,8 +108,8 @@ export default function Document() {
 
 
     return (
-        <div className="page flex items-center">
-            <div className='w-1/4 h-[90vh] '>
+        <div className="page flex items-center !bg-terciary">
+            <div className='w-1/4 h-[90vh] border-r border-white '>
                 <div className='bg-terciary mx-4 rounded-md   py-8 items-center h-[90vh] '>
                     {!resolved && <h1 className='text-2xl text-primary text-center'>New Report</h1>}
                     {(resolved && !pending) && <h1 className='text-2xl text-primary text-center'>{response?.documentName}</h1>}
@@ -181,21 +182,25 @@ export default function Document() {
                         </div>
                         <div className='flex grow justify-between mt-8'>
                             <div className='w-[48%] mr-4'>
-                                <h2 className='text-center bg-bg rounded-md py-2 mb-2 '>Mistakes Found</h2>
+                                <h2 className='  py-2 mb-2 border-b border-white text-lg'>Mistakes Found</h2>
                                 <div>
                                     {response.mistakes.map((mistake, index) => (
-                                        <div key={index} className='flex items-center bg-secondar'>
+                                        <div key={index} className='flex items-center'>
                                             <p>{mistake}</p>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                             <div className='w-[48%]'>
-                                <h2 className='text-center bg-bg rounded-md py-2 mb-2 '>Unsure About</h2>
+                                <h2 className='py-2 mb-2 border-b border-white text-lg '>Unsure About</h2>
                                 <div>
                                     {response.notSureAbout.map((mistake, index) => (
-                                        <div key={index} className='flex items-center bg-secondar'>
+                                        <div key={index} className='flex items-center justify-between '>
                                             <p>{mistake}</p>
+                                            <div className='flex'>
+                                                <IconCheck className='mr-4 cursor-pointer' size={32} color='#65a30d' />
+                                                <IconX className='cursor-pointer' size={32} color='#dc2626' />
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -219,6 +224,7 @@ export default function Document() {
 
 
 const CircularProgress = ({ value, max = 100 }) => {
+
 
     const radius = 30; // Radius of the circle
     const circumference = 2 * Math.PI * radius;
