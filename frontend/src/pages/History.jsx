@@ -160,7 +160,7 @@ export default function History() {
 
   const handleItemsPerPageChange = (e) => {
     setItemsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Reset to first page when items per page changes
+    setCurrentPage(1);
   };
 
   const handlePageChange = (newPage) => {
@@ -214,7 +214,7 @@ export default function History() {
               <input
                 type="text"
                 placeholder="Search"
-                className="p-2 border rounded-xl bg-terciary"
+                className="p-2 rounded-md bg-bg"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />

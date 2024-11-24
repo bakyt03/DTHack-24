@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { IconEdit, IconUserCircle } from "@tabler/icons-react";
 
@@ -51,6 +51,7 @@ export default function User() {
       value: "Company s.r.o.",
     },
   ]);
+  const [filteredData, setFilteredData] = useState(userData);
   const [search, setSearch] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
@@ -60,18 +61,19 @@ export default function User() {
     setEditValue(value);
   };
 
-  console.log(editIndex, editValue);
+  useEffect(() => {
+    const filtered = userData.filter((data) =>
+      data.title.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredData(filtered);
+  }, [search, userData]);
 
-  //   const handleSaveClick = (index) => {
-  //     const updatedUserData = [...userData];
-  //     updatedUserData[index].value = editValue;
-  //     setUserData(updatedUserData);
-  //     setEditIndex(null);
-  //   };
-
-  //   const handleInputChange = (e) => {
-  //     setEditValue(e.target.value);
-  //   };
+  const handleSaveClick = (index) => {
+    const updatedUserData = [...userData];
+    updatedUserData[index].value = editValue;
+    setUserData(updatedUserData);
+    setEditIndex(null);
+  };
 
   const handleDelete = (data) => {
     const updatedUserData = userData.filter((d) => d.id !== data.id);
@@ -86,7 +88,7 @@ export default function User() {
           <h1 className="text-3xl font-semibold text-center">
             {user.username}
           </h1>
-          <div className="flex flex-col child:flex child:justify-around">
+          <div className="flex flex-col child:flex child:justify-between w-[70%] mx-auto">
             <p>
               <strong>First Name:</strong> {user.firstname}
             </p>
@@ -103,32 +105,52 @@ export default function User() {
               <input
                 type="text"
                 placeholder="Search"
-                className="p-2 border rounded-xl bg-terciary"
+                className="p-2 rounded-md bg-bg"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
           </div>
-          {userData.length > 0 ? (
+          {filteredData.length > 0 ? (
             <table className="w-full">
               <tbody>
-                {userData.map((data, i) => (
+                {filteredData.map((data, i) => (
                   <tr key={data.id}>
-                    <td className="text-left p-2">{data.title}</td>
-                    <td className="text-left p-2">{data.value}</td>
+                    <td className="text-left p-3">{data.title}</td>
+                    <td className="text-left p-3">
+                      {editIndex === i ? (
+                        <input
+                          type="text"
+                          value={editValue}
+                          className="px-2 rounded-md bg-bg"
+                          onChange={(e) => setEditValue(e.target.value)}
+                        />
+                      ) : (
+                        data.value
+                      )}
+                    </td>
                     <td className="text-left p-2">
                       <IconEdit
                         className="cursor-pointer"
                         onClick={() => handleEditClick(i, data.value)}
                       />
                     </td>
-                    <td className="text-right">
-                      <button
-                        className="flex py-[6px] px-2 ml-3 bg-primary rounded-xl"
-                        onClick={() => handleDelete(data)}
-                      >
-                        Delete
-                      </button>
+                    <td className="text-right child:w-16">
+                      {editIndex === i ? (
+                        <button
+                          className="flex py-[6px] px-2 ml-3 bg-[#0ead69] rounded-xl justify-center"
+                          onClick={() => handleSaveClick(i)}
+                        >
+                          Save
+                        </button>
+                      ) : (
+                        <button
+                          className="flex py-[6px] px-2 ml-3 bg-primary rounded-xl justify-center"
+                          onClick={() => handleDelete(data)}
+                        >
+                          Delete
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
