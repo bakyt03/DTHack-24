@@ -239,8 +239,8 @@ export default function Document() {
 
     return (
         <div className="page flex items-center !bg-terciary">
-            <div className='w-1/4 h-[90vh] border-r border-white '>
-                <div className='bg-terciary mx-4 rounded-md   py-8 items-center h-[90vh] '>
+            <div className='w-1/4 min-h-[90vh] border-r border-white '>
+                <div className='bg-terciary mx-4 rounded-md   py-8 items-center min-h-[90vh] '>
                     {!resolved && <h1 className='text-2xl text-primary text-center'>New Report</h1>}
                     {(resolved && !pending) && <h1 className='text-2xl text-primary text-center'>{response?.documentName}</h1>}
                     <div className='h-full flex flex-col justify-center '>
@@ -301,8 +301,8 @@ export default function Document() {
                 </div>
 
             </div >
-            <div className='w-3/4 h-[90vh]'>
-                <div className='bg-terciary mx-4 rounded-md p-8 h-[90vh]'>
+            <div className='w-3/4 min-h-[90vh]'>
+                <div className='bg-terciary mx-4 rounded-md p-8 min-h-[90vh]'>
                     {!resolved && <div className='flex justify-center items-center w-full h-full'>
                         {!pending && <h1 className='text-primary text-3xl'>Submit files to create new report</h1>}
                         {pending && <h1 className='text-primary text-3xl'>Generating{dots}</h1>}
