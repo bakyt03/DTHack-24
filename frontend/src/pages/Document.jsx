@@ -84,6 +84,8 @@ export default function Document() {
                 setResolved(true);
             });
         console.log(response);
+
+        fetchUserData();
     };
 
     const [question, setQuestion] = useState('');
@@ -126,6 +128,22 @@ export default function Document() {
         }
     }
 
+    const [userData, setUserData] = useState(null);
+
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_PATH}/users/userdata?id=${user.id}`
+            );
+            const data = await response.json();
+            console.log(data);
+
+            setUserData(data);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    };
+
 
 
     const handleFileChange = async (event, doc) => {
@@ -146,6 +164,16 @@ export default function Document() {
         const InputRef = val === 1 ? targetInputRef : rulesInputRef;
         InputRef.current.value = "";
         InputRef.current.click();
+    }
+
+    const [fixedMistakes, setFixedMistakes] = useState([]);
+
+    const addToFixedMistake = (index) => {
+        setFixedMistakes([...fixedMistakes, index]);
+    }
+
+    const removeFromFixedMistake = (index) => {
+        setFixedMistakes(fixedMistakes.filter(i => i !== index));
     }
 
 
@@ -223,32 +251,45 @@ export default function Document() {
                             </div>
                         </div>
                         <div className='flex grow justify-between mt-8'>
-                            <div className='w-[48%] mr-4'>
+                            {response.mistakes.length > 0 && <div className={`${response.notSureAbout.length > 0 ? " w-[48%] mr-4 " : "  w-[98%] mx-2"} `}>
                                 <h2 className='  py-2 mb-2 border-b border-white text-lg'>Mistakes Found</h2>
                                 <div>
                                     {response.mistakes.map((mistake, index) => (
-                                        <div key={index} className='flex items-center pb-3'>
-                                            <span className='size-3 bg-primary rounded-full mr-4 '></span>
-                                            <p>
-                                                {
-                                                    Object.keys(mistake).map((key, index) => (
-                                                        <div key={index}>
-                                                            <span>{key}: {mistake[key]}</span>
-                                                            {response.recommendations.filter(suggestion => !!suggestion[key]).map((suggestion, index) => (
-                                                                <div>
-                                                                    <span className='text-primary'>Suggestion:</span>
-                                                                    <span>{suggestion[key]}</span>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    ))
-                                                }
-                                            </p>
+                                        <div key={index} className='flex justify-between items-center pb-3'>
+                                            <div className='flex items-center'>
+                                                <span className='size-3 bg-primary rounded-full mr-4 '></span>
+                                                <p>
+                                                    {
+                                                        Object.keys(mistake).map((key, index) => (
+                                                            <div key={index}>
+                                                                <span>{key.replaceAll("_", " ")}: {mistake[key]}</span>
+                                                                <br />
+                                                                <span className='text-primary'>Suggestion:</span>
+                                                                {
+                                                                    userData?.filter(user => user.dataName === key).map((user, index) => (
+                                                                        <span className='ml-1 bg-bg p-1 rounded-md cursor-pointer hover:bg-[#353535]' title='Copy' onClick={() => { navigator.clipboard.writeText(user.dataValue) }}>{user.dataValue}</span>
+                                                                    ))
+                                                                }
+                                                                {response.recommendations.filter(suggestion => !!suggestion[key]).map((suggestion, index) => (
+                                                                    <span>
+                                                                        {
+                                                                            userData?.filter(user => user.dataName === key).length === 0 && <span className={`" ml-1 ${suggestion[key].length < 13 ? " bg-bg p-1 rounded-md cursor-pointer hover:bg-[#353535] " : " "}`} title='Copy' onClick={() => { navigator.clipboard.writeText(user.dataValue) }}>{suggestion[key]}</span>
+                                                                        }
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </p>
+                                            </div>
+
+                                            {fixedMistakes.filter(e => e === index).length < 1 && <div onClick={() => addToFixedMistake(index)} className='btn '>I Fixed</div>}
+                                            {fixedMistakes.filter(e => e === index).length > 0 && <div onClick={() => removeFromFixedMistake(index)} className='btn '>Cancel</div>}
                                         </div>
                                     ))}
                                 </div>
-                            </div>
-                            <div className='w-[48%]'>
+                            </div>}
+                            {response.notSureAbout.length > 0 && <div className={`${response.mistakes.length > 0 ? " w-[48%] mr-4 " : "  w-[98%] mx-2"} `}>
                                 <h2 className='py-2 mb-2 border-b border-white text-lg '>Unsure About</h2>
                                 <div>
                                     {response.notSureAbout.map((mistake, index) => (
@@ -259,7 +300,7 @@ export default function Document() {
                                         </div>
                                     ))}
                                 </div>
-                            </div>
+                            </div>}
                         </div>
                         <div className='w-full flex items-center'>
                             <input value={question} onChange={e => setQuestion(e.target.value)} type="text" className='bg-bg py-2 w-full rounded-md' placeholder='' />
