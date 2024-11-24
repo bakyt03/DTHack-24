@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { IconFileFilled, IconFile, IconFileSettings, IconFileSpark, IconCheck, IconX, IconUpload, IconReload } from '@tabler/icons-react';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { data } from 'react-router-dom';
 
 export default function Document() {
 
@@ -9,6 +10,7 @@ export default function Document() {
     const [pending, setPending] = useState(false);
     const targetInputRef = useRef(null);
     const rulesInputRef = useRef(null);
+    const referenceInputRef = useRef(null);
 
     const [resolved, setResolved] = useState(false);
 
@@ -22,6 +24,7 @@ export default function Document() {
     const [formData, setFormData] = useState({
         target: null,
         rules: null,
+        reference: null,
         docnName: ''
     });
 
@@ -58,6 +61,7 @@ export default function Document() {
         dataF.append('document', formData.target);
         dataF.append('instructions', formData.rules);
         dataF.append('documentName', formData.docnName);
+        dataF.append('reference', formData.reference);
 
         fetch(`${process.env.REACT_APP_PATH}/openapi/upload?documentName=${formData.docnName}&userID=${user.id}`, {
             method: 'POST',
@@ -108,6 +112,7 @@ export default function Document() {
         let dataF = new FormData();
         dataF.append('document', formData.target);
         dataF.append('instructions', formData.rules);
+        dataF.append('reference', formData.reference);
         dataF.append('documentName', formData.docnName);
         if (question.length > 5) {
             if (notSureReplying) {
@@ -174,7 +179,7 @@ export default function Document() {
 
         setFormData((prevData) => ({
             ...prevData,
-            [doc === 1 ? 'target' : 'rules']: file
+            [doc === 1 ? 'target' : doc === 2 ? 'rules' : 'reference']: file
         }));
 
 
@@ -183,7 +188,7 @@ export default function Document() {
     };
 
     function openFileExplorer(val) {
-        const InputRef = val === 1 ? targetInputRef : rulesInputRef;
+        const InputRef = val === 1 ? targetInputRef : val === 2 ? rulesInputRef : referenceInputRef;
         InputRef.current.value = "";
         InputRef.current.click();
     }
@@ -285,6 +290,25 @@ export default function Document() {
 
                                 </div>
                                 {resolved && <div onClick={() => openFileExplorer(2)} className='cursor-pointer h-full flex justify-center items-center py-2  rounded-md mt-2 text-sm  bg-primary right-0'><IconReload color='#fff' /></div>}
+
+                            </div>
+                            <div className=' flex flex-col  justify-center my-4'>
+                                <label className='text-center text-lg  mb-1' htmlFor="rules">Reference File</label>
+                                <div className="bg-bg relative  font-bold cursor-pointer py-4   rounded-md flex flex-col justify-center items-center  " onClick={() => openFileExplorer(3)}>
+
+                                    {formData.reference ? <IconFileFilled size={32} color='#fff' /> : <IconUpload size={32} color='#fff' />}
+                                    {!!formData.reference && <p className=' text-sm text-center'>{formData.reference.name}</p>}
+                                    {pending && <p className=' text-sm'>Uploading...</p>}
+
+                                    <input
+                                        type="file"
+                                        ref={referenceInputRef}
+                                        onChange={e => handleFileChange(e, 3)}
+                                        className='hidden'
+                                    />
+
+                                </div>
+                                {resolved && <div onClick={() => openFileExplorer(3)} className='cursor-pointer h-full flex justify-center items-center py-2  rounded-md mt-2 text-sm  bg-primary right-0'><IconReload color='#fff' /></div>}
 
                             </div>
 
@@ -420,7 +444,7 @@ const CircularProgress = ({ value, max = 100 }) => {
     }
 
     return (
-        <div className="relative flex items-center justify-center w-20 h-20">
+        <div className="relative flex items-center justify-center w-20 h-20 -z-0">
 
             <svg className="rotate-90" width="80" height="80">
                 {/* Background Circle */}
