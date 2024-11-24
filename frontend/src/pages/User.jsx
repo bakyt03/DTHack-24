@@ -121,7 +121,7 @@ export default function User() {
                 {filteredData.map((data, i) => (
                   <tr key={data.id}>
                     <td className="text-left p-3">{data.title}</td>
-                    <td className="text-left p-3">
+                    <td className="text-left p-3 overflow-x-hidden text-ellipsis max-w-[15ch]">
                       {editIndex === i ? (
                         <input
                           type="text"
