@@ -16,6 +16,8 @@ export default function User() {
   };
 
   const fetchUserData = async () => {
+    console.log("Fetching user data");
+
     try {
       const response = await fetch(
         `${process.env.REACT_APP_PATH}/users/userdata?id=${user.id}`
@@ -43,13 +45,13 @@ export default function User() {
   }, [search, userData]);
 
   const handleSaveClick = async (id, value) => {
-    console.log("Save clicked", id + " " + value);
+    console.log("Updating data:", id, value);
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_PATH}/users/update?id=${id}`,
+        `${process.env.REACT_APP_PATH}/users/updateuserdata?dataID=${id}&value=${value}`,
         {
-          method: "PATCH",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
@@ -68,10 +70,23 @@ export default function User() {
     setEditIndex(null);
   };
 
-  const handleDelete = (data) => {
+  const handleDelete = (id) => {
     if (window.confirm("Are you sure?")) {
-      const updatedUserData = userData.filter((d) => d.id !== data.id);
-      setUserData(updatedUserData);
+      console.log("Deleting data:", id);
+
+      fetch(`${process.env.REACT_APP_PATH}/users/deleteuserdata?dataID=${id}`, {
+        method: "DELETE",
+      })
+        .then((response) => {
+          if (response.ok) {
+            fetchUserData(); // Fetch updated data
+          } else {
+            console.error("Failed to delete data");
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting data:", error);
+        });
     }
   };
 
@@ -116,8 +131,10 @@ export default function User() {
               <tbody>
                 {filteredData.map((data, i) => (
                   <tr key={data.id}>
-                    <td className="text-left p-3">{data.dataName}</td>
-                    <td className="text-left p-3 overflow-x-hidden text-ellipsis max-w-[15ch]">
+                    <td className="text-left p-3 overflow-x-hidden text-ellipsis text-nowrap max-w-[15ch]">
+                      {data.dataName.replaceAll("_", " ")}
+                    </td>
+                    <td className="text-left p-3 overflow-x-hidden text-ellipsis text-nowrap max-w-[15ch]">
                       {editIndex === i ? (
                         <input
                           type="text"
@@ -139,16 +156,14 @@ export default function User() {
                       {editIndex === i ? (
                         <button
                           className="flex w-24 py-1 px-6 ml-3 bg-[#0ead69] rounded-xl justify-center"
-                          onClick={() =>
-                            handleSaveClick(data.id, data.dataValue)
-                          }
+                          onClick={() => handleSaveClick(data.id, editValue)}
                         >
                           Save
                         </button>
                       ) : (
                         <button
                           className="flex w-24 py-1 px-6 ml-3 bg-primary rounded-xl justify-center"
-                          onClick={() => handleDelete(data)}
+                          onClick={() => handleDelete(data.id)}
                         >
                           Delete
                         </button>
