@@ -658,6 +658,10 @@ video {
   margin-bottom: 2rem;
 }
 
+.ml-1 {
+  margin-left: 0.25rem;
+}
+
 .flex {
   display: flex;
 }
@@ -758,6 +762,10 @@ video {
 
 .w-52 {
   width: 13rem;
+}
+
+.w-\[98\%\] {
+  width: 98%;
 }
 
 .max-w-\[15ch\] {
@@ -930,6 +938,10 @@ video {
 
 .p-8 {
   padding: 2rem;
+}
+
+.p-1 {
+  padding: 0.25rem;
 }
 
 .px-16 {
@@ -1256,6 +1268,11 @@ button:disabled {
 .after\:content-\[\'\2022\'\]::after {
   --tw-content: '•';
   content: var(--tw-content);
+}
+
+.hover\:bg-\[\#353535\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(53 53 53 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:text-white:hover {
