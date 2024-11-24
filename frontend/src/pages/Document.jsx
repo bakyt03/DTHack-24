@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { IconFileFilled, IconFile, IconFileSettings, IconFileSpark, IconCheck, IconX, IconUpload, IconReload } from '@tabler/icons-react';
 import { useAuthContext } from '../hooks/useAuthContext';
 
@@ -14,6 +14,8 @@ export default function Document() {
 
 
     const [response, setResponse] = useState(null);
+    const [correctness, setCorrectness] = useState(0);
+    const [mistakeCount, setMistakeCount] = useState(0);
 
     const [formData, setFormData] = useState({
         target: null,
@@ -27,7 +29,7 @@ export default function Document() {
     //             documentType: "pdf",
     //                 primaryCorrect: 85,
     //                     secondaryCorrect: null,
-    //                         assistandId: "1",
+    //                         assistantId: "1",
     //                             mistakes: [
     //                                 "Field 'name' is mandatory and cannot be empty",
     //                                 "Field 'rodne cislo' cannot contain letters",
@@ -67,13 +69,19 @@ export default function Document() {
                 console.log(data);
 
                 let parsedData = data.response;
-                parsedData['assistandId'] = data.assistandId;
+                parsedData['assistantId'] = data.assistantId;
                 parsedData['primaryCorrect'] = parseInt(parsedData.completeness.match(/\d+/)[0], 10);
                 const secondaryMatch = parsedData.completeness.match(/\d+/g);
                 parsedData['secondaryCorrect'] = secondaryMatch.length > 1 ? parseInt(secondaryMatch[1], 10) : null;
                 console.log(parsedData);
-
+                setCorrectness(parsedData.primaryCorrect);
+                setMistakeCount(parsedData.mistakes.length);
                 setResponse(parsedData);
+                setFixedMistakes([]);
+                if (parsedData.error) {
+                    alert(parsedData.errorResponse);
+                    window.location.reload();
+                }
             })
             .catch((err) => {
 
@@ -98,7 +106,7 @@ export default function Document() {
         dataF.append('instructions', formData.rules);
         dataF.append('documentName', formData.docnName);
         if (question.length > 5) {
-            fetch(`${process.env.REACT_APP_PATH}/openapi/ask-question?assistantID=${response.assistandId}&userPrompt=${question}&userID=${user.id}`, {
+            fetch(`${process.env.REACT_APP_PATH}/openapi/ask-question?assistantID=${response.assistantId}&userPrompt=${question}&userID=${user.id}`, {
                 method: 'POST',
                 body: dataF,
                 headers: {
@@ -109,13 +117,19 @@ export default function Document() {
                 .then(data => {
 
                     let parsedData = data.response;
-                    parsedData['assistandId'] = data.assistandId;
+                    parsedData['assistantId'] = data.assistantId;
                     parsedData['primaryCorrect'] = parseInt(parsedData.completeness.match(/\d+/)[0], 10);
                     const secondaryMatch = parsedData.completeness.match(/\d+/g);
                     parsedData['secondaryCorrect'] = secondaryMatch.length > 1 ? parseInt(secondaryMatch[1], 10) : null;
                     console.log(parsedData);
-
+                    setCorrectness(parsedData.primaryCorrect);
+                    setMistakeCount(parsedData.mistakes.length);
                     setResponse(parsedData);
+                    setFixedMistakes([]);
+                    if (parsedData.error) {
+                        alert(parsedData.errorResponse);
+                        window.location.reload();
+                    }
                 })
                 .catch(err => {
                     console.error(err);
@@ -167,14 +181,48 @@ export default function Document() {
     }
 
     const [fixedMistakes, setFixedMistakes] = useState([]);
+    const [fixedUnsure, setFixedUnsure] = useState([]);
+
+
 
     const addToFixedMistake = (index) => {
         setFixedMistakes([...fixedMistakes, index]);
     }
 
+
     const removeFromFixedMistake = (index) => {
         setFixedMistakes(fixedMistakes.filter(i => i !== index));
     }
+
+
+
+
+
+
+    useEffect(() => {
+        let temp = (100 - response?.primaryCorrect) / mistakeCount;
+        let temp2 = response?.primaryCorrect + fixedMistakes.length * temp
+        if (temp2 > 100) {
+            setCorrectness(100);
+        }
+        setCorrectness(Math.round(temp2));
+
+        // eslint-disable-next-line
+    }, [fixedMistakes]);
+
+    const [dots, setDots] = useState('...');
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setDots(dots => {
+                if (dots.length > 2) {
+                    return '.';
+                } else {
+                    return dots + '.';
+                }
+            });
+        }, 500);
+        return () => clearInterval(interval);
+    }, []);
 
 
     return (
@@ -205,6 +253,8 @@ export default function Document() {
                                         className='hidden'
                                     />
                                 </div>
+                                {resolved && <div onClick={() => openFileExplorer(1)} className='cursor-pointer h-full flex justify-center items-center py-2  rounded-md mt-2 text-sm  bg-primary right-0'><IconReload color='#fff' /></div>}
+
                             </div>
                             <div className=' flex flex-col  justify-center my-4'>
                                 <label className='text-center text-lg  mb-1' htmlFor="rules">Rules File</label>
@@ -220,9 +270,10 @@ export default function Document() {
                                         onChange={e => handleFileChange(e, 2)}
                                         className='hidden'
                                     />
-                                    {resolved && <div className='h-full flex justify-center items-center w-20 rounded-r-md text-sm absolute bg-primary right-0'><IconReload color='#fff' /></div>}
 
                                 </div>
+                                {resolved && <div onClick={() => openFileExplorer(2)} className='cursor-pointer h-full flex justify-center items-center py-2  rounded-md mt-2 text-sm  bg-primary right-0'><IconReload color='#fff' /></div>}
+
                             </div>
 
                             {!resolved && <div className='w-full   flex justify-center items-center mt-8'>
@@ -230,6 +281,8 @@ export default function Document() {
                             </div>
                             }
                         </form>
+                        {!!resolved && <div className='w-[80%] mx-auto h-max cursor-pointer mb-12  text-xl text-center py-2  rounded-md mt-2   bg-primary right-0' onClick={() => window.location.reload()}>New conversation</div>
+                        }
                     </div>
 
 
@@ -240,13 +293,13 @@ export default function Document() {
                 <div className='bg-terciary mx-4 rounded-md p-8 h-[90vh]'>
                     {!resolved && <div className='flex justify-center items-center w-full h-full'>
                         {!pending && <h1 className='text-primary text-3xl'>Submit files to create new report</h1>}
-                        {pending && <h1 className='text-primary text-3xl'>Generating...</h1>}
+                        {pending && <h1 className='text-primary text-3xl'>Generating{dots}</h1>}
                     </div>}
                     {(resolved && response) && <div className='flex flex-col justify-center  h-full w-full'>
                         <div>
                             <h1 className='text-primary text-center text-3xl'>Report Generated</h1>
                             <div className='flex flex-col justify-center items-center mt-8'>
-                                <CircularProgress value={response.primaryCorrect} />
+                                <CircularProgress value={correctness} />
                                 <span>Document score</span>
                             </div>
                         </div>
@@ -260,20 +313,29 @@ export default function Document() {
                                                 <span className='size-3 bg-primary rounded-full mr-4 '></span>
                                                 <p>
                                                     {
-                                                        Object.keys(mistake).map((key, index) => (
-                                                            <div key={index}>
+                                                        Object.keys(mistake).map((key, i) => (
+                                                            <div className={` ${fixedMistakes.includes(index) ? " child:line-through " : ""} `} key={i}>
                                                                 <span>{key.replaceAll("_", " ")}: {mistake[key]}</span>
                                                                 <br />
-                                                                <span className='text-primary'>Suggestion:</span>
+
                                                                 {
                                                                     userData?.filter(user => user.dataName === key).map((user, index) => (
-                                                                        <span className='ml-1 bg-bg p-1 rounded-md cursor-pointer hover:bg-[#353535]' title='Copy' onClick={() => { navigator.clipboard.writeText(user.dataValue) }}>{user.dataValue}</span>
+                                                                        <div>
+                                                                            <span className={` text-primary`}>Suggestion:</span>
+                                                                            <span className='ml-1 bg-bg p-1 rounded-md cursor-pointer hover:bg-[#353535]' title='Copy' onClick={() => { navigator.clipboard.writeText(user.dataValue) }}>{user.dataValue}</span>
+
+                                                                        </div>
                                                                     ))
                                                                 }
                                                                 {response.recommendations.filter(suggestion => !!suggestion[key]).map((suggestion, index) => (
                                                                     <span>
                                                                         {
-                                                                            userData?.filter(user => user.dataName === key).length === 0 && <span className={`" ml-1 ${suggestion[key].length < 13 ? " bg-bg p-1 rounded-md cursor-pointer hover:bg-[#353535] " : " "}`} title='Copy' onClick={() => { navigator.clipboard.writeText(user.dataValue) }}>{suggestion[key]}</span>
+                                                                            userData?.filter(user => user.dataName === key).length === 0 &&
+                                                                            <div>
+                                                                                <span className={` text-primary`}>Suggestion:</span>
+                                                                                <span className={`" ml-1 ${suggestion[key].length < 20 ? " bg-bg p-1 rounded-md cursor-pointer hover:bg-[#353535] " : " "}`} title='Copy' onClick={() => { navigator.clipboard.writeText(user.dataValue) }}>{suggestion[key]}</span>
+
+                                                                            </div>
                                                                         }
                                                                     </span>
                                                                 ))}
@@ -283,7 +345,7 @@ export default function Document() {
                                                 </p>
                                             </div>
 
-                                            {fixedMistakes.filter(e => e === index).length < 1 && <div onClick={() => addToFixedMistake(index)} className='btn '>I Fixed</div>}
+                                            {fixedMistakes.filter(e => e === index).length < 1 && <div onClick={() => addToFixedMistake(index)} className='btn text-nowrap '>I Fixed</div>}
                                             {fixedMistakes.filter(e => e === index).length > 0 && <div onClick={() => removeFromFixedMistake(index)} className='btn '>Cancel</div>}
                                         </div>
                                     ))}
