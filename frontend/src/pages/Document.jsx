@@ -185,7 +185,6 @@ export default function Document() {
                                     {formData.rules ? <IconFileFilled size={32} color='#fff' /> : <IconUpload size={32} color='#fff' />}
                                     {!!formData.rules && <p className=' text-sm text-center'>{formData.rules.name}</p>}
                                     {pending && <p className=' text-sm'>Uploading...</p>}
-                                    {resolved && <div className='h-full flex justify-center items-center w-20 rounded-r-md text-sm absolute bg-primary right-0'><IconReload color='#fff' /></div>}
 
                                     <input
                                         type="file"
@@ -193,6 +192,8 @@ export default function Document() {
                                         onChange={e => handleFileChange(e, 2)}
                                         className='hidden'
                                     />
+                                    {resolved && <div className='h-full flex justify-center items-center w-20 rounded-r-md text-sm absolute bg-primary right-0'><IconReload color='#fff' /></div>}
+
                                 </div>
                             </div>
 
@@ -227,7 +228,22 @@ export default function Document() {
                                 <div>
                                     {response.mistakes.map((mistake, index) => (
                                         <div key={index} className='flex items-center pb-3'>
-                                            <span className='size-3 bg-primary rounded-full mr-4 shadow-md shadow-primary'></span> <p>{mistake}</p>
+                                            <span className='size-3 bg-primary rounded-full mr-4 '></span>
+                                            <p>
+                                                {
+                                                    Object.keys(mistake).map((key, index) => (
+                                                        <div key={index}>
+                                                            <span>{key}: {mistake[key]}</span>
+                                                            {response.recommendations.filter(suggestion => !!suggestion[key]).map((suggestion, index) => (
+                                                                <div>
+                                                                    <span className='text-primary'>Suggestion:</span>
+                                                                    <span>{suggestion[key]}</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ))
+                                                }
+                                            </p>
                                         </div>
                                     ))}
                                 </div>
