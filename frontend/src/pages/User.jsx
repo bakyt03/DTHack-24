@@ -15,24 +15,22 @@ export default function User() {
     setEditValue(value);
   };
 
-  console.log(user.id);
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_PATH}/users/userdata?id=${user.id}`
+      );
+      const data = await response.json();
+      console.log(data);
+
+      setUserData(data);
+      setFilteredData(data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_PATH}/users/userdata?id=1`
-        );
-        const data = await response.json();
-        console.log(data);
-
-        setUserData(data);
-        setFilteredData(data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
     fetchUserData();
     // eslint-disable-next-line
   }, []);
@@ -44,10 +42,29 @@ export default function User() {
     setFilteredData(filtered);
   }, [search, userData]);
 
-  const handleSaveClick = (index) => {
-    const updatedUserData = [...userData];
-    updatedUserData[index].value = editValue;
-    setUserData(updatedUserData);
+  const handleSaveClick = async (id, value) => {
+    console.log("Save clicked", id + " " + value);
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_PATH}/users/update?id=${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ value }),
+        }
+      );
+
+      if (response.ok) {
+        fetchUserData(); // Fetch updated data
+      } else {
+        console.error("Failed to update data");
+      }
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
     setEditIndex(null);
   };
 
@@ -122,7 +139,9 @@ export default function User() {
                       {editIndex === i ? (
                         <button
                           className="flex w-24 py-1 px-6 ml-3 bg-[#0ead69] rounded-xl justify-center"
-                          onClick={() => handleSaveClick(i)}
+                          onClick={() =>
+                            handleSaveClick(data.id, data.dataValue)
+                          }
                         >
                           Save
                         </button>
