@@ -729,6 +729,18 @@ video {
   width: 60%;
 }
 
+.w-\[70\%\] {
+  width: 70%;
+}
+
+.w-16 {
+  width: 4rem;
+}
+
+.w-24 {
+  width: 6rem;
+}
+
 .max-w-\[80vw\] {
   max-width: 80vw;
 }
@@ -859,6 +871,11 @@ video {
   background-color: rgb(21 21 21 / var(--tw-bg-opacity, 1)) !important;
 }
 
+.bg-\[\#0ead69\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(14 173 105 / var(--tw-bg-opacity, 1));
+}
+
 .p-2 {
   padding: 0.5rem;
 }
@@ -869,6 +886,10 @@ video {
 
 .p-4 {
   padding: 1rem;
+}
+
+.p-3 {
+  padding: 0.75rem;
 }
 
 .px-16 {
@@ -924,6 +945,16 @@ video {
 .py-\[6px\] {
   padding-top: 6px;
   padding-bottom: 6px;
+}
+
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.px-9 {
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
 }
 
 .pb-10 {
@@ -1030,6 +1061,11 @@ video {
   color: rgb(250 204 21 / var(--tw-text-opacity, 1));
 }
 
+.text-\[\#b4b4b4\] {
+  --tw-text-opacity: 1;
+  color: rgb(180 180 180 / var(--tw-text-opacity, 1));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -1099,6 +1135,48 @@ button:disabled {
   max-width: 1200px;
 }
 
+.after\:absolute::after {
+  content: var(--tw-content);
+  position: absolute;
+}
+
+.after\:bottom-\[-15px\]::after {
+  content: var(--tw-content);
+  bottom: -15px;
+}
+
+.after\:left-1\/2::after {
+  content: var(--tw-content);
+  left: 50%;
+}
+
+.after\:-translate-x-1\/2::after {
+  content: var(--tw-content);
+  --tw-translate-x: -50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.after\:transform::after {
+  content: var(--tw-content);
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.after\:text-\[\#e63a46\]::after {
+  content: var(--tw-content);
+  --tw-text-opacity: 1;
+  color: rgb(230 58 70 / var(--tw-text-opacity, 1));
+}
+
+.after\:content-\[\'\2022\'\]::after {
+  --tw-content: '•';
+  content: var(--tw-content);
+}
+
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
 .child\:mx-3 > * {
   margin-left: 0.75rem;
   margin-right: 0.75rem;
@@ -1115,6 +1193,10 @@ button:disabled {
 
 .child\:flex > * {
   display: flex;
+}
+
+.child\:w-16 > * {
+  width: 4rem;
 }
 
 .child\:justify-between > * {
