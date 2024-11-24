@@ -111,7 +111,6 @@ export default function Document() {
         dataF.append('documentName', formData.docnName);
         if (question.length > 5) {
             if (notSureReplying) {
-                dataF.append('question', `You were not sure about this field: ${notSureReplying}. ${question}`);
                 setNotSureReplying("");
                 setNotSureReplyingIndex(null);
             }
@@ -379,7 +378,7 @@ export default function Document() {
                         </div>
                         {notSureReplying && (
                             <div className='flex items-center'>
-                                <span className="text-white bg-primary max-w-50 text-nowrap text-ellipsis overflow-x-hidden rounded-t-xl py-1 px-4">Replying to: "unsure about [{notSureReplyingIndex + 1}]" <span className='cursor-pointer ml-4' onClick={() => { setNotSureReplying(""); setNotSureReplyingIndex(null) }}>x</span></span>
+                                <span className="text-white bg-primary max-w-50 text-nowrap text-ellipsis overflow-x-hidden rounded-t-xl py-1 px-4">Replying to: unsure about [{notSureReplyingIndex + 1}] <span className='cursor-pointer ml-4' onClick={() => { setNotSureReplying(""); setNotSureReplyingIndex(null) }}>x</span></span>
 
                             </div>
                         )}
