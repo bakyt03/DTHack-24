@@ -76,9 +76,13 @@ export default function User() {
   };
 
   const handleDelete = (data) => {
-    const updatedUserData = userData.filter((d) => d.id !== data.id);
-    setUserData(updatedUserData);
+    if (window.confirm("Are you sure?")) {
+      const updatedUserData = userData.filter((d) => d.id !== data.id);
+      setUserData(updatedUserData);
+    }
   };
+
+
 
   return (
     <div className="page">
@@ -135,17 +139,17 @@ export default function User() {
                         onClick={() => handleEditClick(i, data.value)}
                       />
                     </td>
-                    <td className="text-right child:w-16">
+                    <td className="text-right">
                       {editIndex === i ? (
                         <button
-                          className="flex py-[6px] px-2 ml-3 bg-[#0ead69] rounded-xl justify-center"
+                          className="flex w-24 py-1 px-6 ml-3 bg-[#0ead69] rounded-xl justify-center"
                           onClick={() => handleSaveClick(i)}
                         >
                           Save
                         </button>
                       ) : (
                         <button
-                          className="flex py-[6px] px-2 ml-3 bg-primary rounded-xl justify-center"
+                          className="flex w-24 py-1 px-6 ml-3 bg-primary rounded-xl justify-center"
                           onClick={() => handleDelete(data)}
                         >
                           Delete
@@ -161,6 +165,6 @@ export default function User() {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 }
